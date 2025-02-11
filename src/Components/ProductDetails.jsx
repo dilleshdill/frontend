@@ -1,114 +1,209 @@
-import React, { useState } from "react";
+import React, { useEffect, useReducer, useState,useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { FaStar, FaRegStar, FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const data = [
+  { id: 1, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
+  { id: 2, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
+  { id: 3, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
+];
 
 const ProductDetails = () => {
-  // State for main image and quantity
-  const [mainImage, setMainImage] = useState(
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080"
-  );
-  const [quantity, setQuantity] = useState(1);
+  const { _id } = useParams();
+  const [book, setBook] = useState(null);
+  const [buy, setBuy] = useState(true);
+  const [error, setError] = useState(null);
+  const [counter, setCounter] = useState(1);
+  const [email, setEmail] = useState(null);
+  const navigate = useNavigate();
+  const [activeIndex,setIndex]=useState(0)
+  const sliderRef = useRef(null)
 
-  // Function to change main image
-  const changeImage = (src) => {
-    setMainImage(src);
+  var settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay:true,
+    autoplaySpeed:3000,
+    beforeChange:(oldIndex,newIndex)=>setIndex(newIndex)
   };
 
-  // Thumbnail images
-  const thumbnails = [
-    "https://images.unsplash.com/photo-1505751171710-1f6d0ace5a85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxMnx8aGVhZHBobmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-    "https://images.unsplash.com/photo-1484704849700-f032a568e944?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw0fHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-    "https://images.unsplash.com/photo-1496957961599-e35b69ef5d7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-    "https://images.unsplash.com/photo-1528148343865-51218c4a13e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-  ];
+
+  useEffect(() => {
+    setEmail(localStorage.getItem("email"));
+  }, []);
+
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        if (!email) return;
+
+        const response = await axios.get(`http://localhost:5002/admin/book-details/${_id}`);
+        if (response.status === 200) {
+          setBook(response.data);
+
+          // Check if book is in favorites
+          const cartResponse = await axios.get(`http://localhost:5002/favorite?email=${email}`);
+          const updatedItem = cartResponse.data.find((item) => item.book_name === response.data.book_name);
+
+          if (updatedItem) {
+            setCounter(updatedItem.count);
+            setBuy(false);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching book details:", error);
+        setError("Failed to fetch product details. Please try again later.");
+      }
+    };
+
+    fetchBookDetails();
+  }, [_id, email]);
+
+  const modifyFavoriteCount = async (book_name, action) => {
+    if (!email) {
+      alert("Please log in to modify favorites.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`http://localhost:5002/favorite/${action}`, {
+        book_name,
+        email,
+        count: action === "increment" ? counter + 1 : counter - 1,
+      });
+
+      if (response.status === 200) {
+        const updatedItem = response.data.favorites.find((item) => item.book_name === book_name);
+        setCounter(updatedItem.count);
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing item:`, error);
+    }
+  };
+
+  const toggleFavorite = async (book) => {
+    try {
+      if (!email) {
+        alert("Please log in to add favorites.");
+        return;
+      }
+
+      const response = await axios.post("http://localhost:5002/favorite", {
+        email,
+        book_name: book.book_name,
+        book_url: book.book_url,
+        price: book.price,
+      });
+
+      if (response.status === 200) {
+        alert("Added to Favorite");
+        setBuy(false);
+        setCounter(1);
+      } else if (response.status === 201) {
+        alert("Removed from Favorite");
+        setBuy(true);
+      }
+    } catch (error) {
+      console.error("Error updating favorite:", error);
+      alert("Error updating favorite.");
+    }
+  };
+
+  if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
+  if (!book) return <div className="text-center p-6">Loading...</div>;
 
   return (
-    <div className="bg-gray-100 py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-wrap -mx-4">
-          {/* Product Images */}
-          <div className="w-full md:w-1/2 px-4 mb-8">
-            <img src={mainImage} alt="Product" className="w-full h-auto rounded-lg shadow-md mb-4" />
-            <div className="flex gap-4 py-4 justify-center overflow-x-auto">
-              {thumbnails.map((src, index) => (
-                <img
-                  key={index}
-                  src={src}
-                  alt={`Thumbnail ${index + 1}`}
-                  className="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
-                  onClick={() => changeImage(src)}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Product Details */}
-          <div className="w-full md:w-1/2 px-4">
-            <h2 className="text-3xl font-bold mb-2">Premium Wireless Headphones</h2>
-            <p className="text-gray-600 mb-4">SKU: WH1000XM4</p>
-
-            <div className="mb-4">
-              <span className="text-2xl font-bold mr-2">$349.99</span>
-              <span className="text-gray-500 line-through">$399.99</span>
-            </div>
-
-            {/* Rating */}
-            <div className="flex items-center mb-4">
-              {[...Array(5)].map((_, index) => (
-                <svg
-                  key={index}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="size-6 text-yellow-500"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              ))}
-              <span className="ml-2 text-gray-600">4.5 (120 reviews)</span>
-            </div>
-
-            <p className="text-gray-700 mb-6">Experience premium sound quality and industry-leading noise cancellation.</p>
-
-            {/* Quantity Input */}
-            <div className="mb-6">
-              <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                Quantity:
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                name="quantity"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                className="w-12 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+    <div className="bg-gray-100 min-h-screen w-screen p-6 flex justify-center">
+      <div className="w-full h-[50%] rounded-lg p-6">
+        {/* Book Image Section */}
+        <div className="flex flex-row md:pl-30">
+          {/* Small Preview Images */}
+          <div className="flex flex-col space-y-3 w-[6%]">
+            {data.map((eachItem,index) => (
+              <img key={eachItem.id} src={eachItem.image} alt="Book Cover" className={`w-full rounded-lg shadow-md ${activeIndex===index ? "opacity-100" : 'opacity-20'}`} onClick={
+                ()=>{
+                  sliderRef.current.slickGoTo(index)
+                  setIndex(index)
+                }
+              }
               />
-            </div>
-
-            {/* Buttons */}
-            <div className="flex space-x-4 mb-6">
-              <button className="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700">
-                Add to Cart
-              </button>
-              <button className="bg-gray-200 flex gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300">
-                Wishlist
-              </button>
-            </div>
-
-            {/* Key Features */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Key Features:</h3>
-              <ul className="list-disc list-inside text-gray-700">
-                <li>Industry-leading noise cancellation</li>
-                <li>30-hour battery life</li>
-                <li>Touch sensor controls</li>
-                <li>Speak-to-chat technology</li>
-              </ul>
-            </div>
+            ))}
           </div>
+
+          {/* Main Image Slider */}
+          <div className="w-[250px] mx-6">
+            <Slider  {...settings} ref={sliderRef}>
+              {data.map((eachItem) => (
+                <div key={eachItem.id} className="flex justify-center w-full">
+                  <img
+                    src={eachItem.image}
+                    alt="Book Cover"
+                    className="w-full md:w-[100%] max-w-xs md:max-w-sm rounded-lg shadow-md"
+                  />
+                </div>
+              ))}
+            </Slider>
+          </div>
+
+          {/* Book Details Section */}
+          <div className="flex flex-col w-full md:w-1/2 md:pt-10 md:pl-10 space-y-4 px-4">
+            <h2 className="text-2xl md:text-3xl font-bold">{book.book_name}</h2>
+            <p className="text-gray-600">Author: {book.author}</p>
+
+            <div className="flex items-center">
+              {[...Array(5)].map((_, index) =>
+                index < book.rating ? (
+                  <FaStar key={index} className="text-yellow-500 h-5 w-5" />
+                ) : (
+                  <FaRegStar key={index} className="text-yellow-500 h-5 w-5" />
+                )
+              )}
+              <span className="ml-2 bg-yellow-500 px-2.5 py-0.5 text-xs font-semibold rounded">{book.rating}.0</span>
+            </div>
+
+            <p className="text-gray-600">Date: {book.date}</p>
+            <div>
+              <span className="text-2xl font-bold mr-2">${book.price}</span>
+            </div>
+
+            {buy ? (
+              <button onClick={() => toggleFavorite(book)} className="bg-gray-800 text-white px-6 py-2 rounded">
+                Add Favorite
+              </button>
+            ) : (
+              <div>
+                <div className="flex items-center space-x-3">
+                  <button className="text-gray-600" onClick={() => modifyFavoriteCount(book.book_name, "decrement")}>
+                    <FaMinusCircle className="text-3xl" />
+                  </button>
+                  <span className="text-2xl font-bold pl-2 pr-0">{counter}</span>
+                  <button className="text-blue-600" onClick={() => modifyFavoriteCount(book.book_name, "increment")}>
+                    <FaPlusCircle className="text-3xl" />
+                  </button>
+                </div>
+                <div className="pt-5 space-x-8 flex">
+                  <button onClick={() => navigate("/favorite")} className="bg-gray-800 text-white px-6 py-2 rounded">
+                    Buy Now
+                  </button>
+                  <button onClick={() => toggleFavorite(book)} className="bg-gray-500 text-white px-6 py-2 rounded">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="pt-8">
+          <p className="text-xl pb-3 font-bold">Description:</p>
+          <p className="pl-5">{book.discription}</p>
         </div>
       </div>
     </div>

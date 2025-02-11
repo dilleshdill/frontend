@@ -13,13 +13,15 @@ import ViewBooks from './Components/ViewBooks';
 import Books from './Components/Books';
 import Favorite from './Components/Favorites';
 import ProductDetails from './Components/ProductDetails';
-
+import CustomerDetails from './Components/CustomerDetails';
+import Homepage from './HomePage/HomePage';
 
 const App = () =>{
   return(
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
+        <Route path='/login' element={<Login />} />
+        <Route path="/" element={<Homepage />} />
         <Route path='/register' element= {<Register />} />
         <Route path ='/header' element = {<Header />} />
         <Route path ='/sidebar' element = {<Sidebar />} />
@@ -30,7 +32,8 @@ const App = () =>{
         <Route path = '/viewbooks' element = {<ViewBooks/>}/>
         <Route path = '/books' element = {<Books/>}/>
         <Route path = '/favorite' element = {<Favorite/>}/>
-        <Route path = '/productDetails/:id' element = {<ProductDetails/>}/>
+        <Route path = '/books/:_id' element = {<ProductDetails/>}/>
+        <Route path = '/customerdetails' element = {<CustomerDetails/>}/>
        </Routes>
     </BrowserRouter>
   )

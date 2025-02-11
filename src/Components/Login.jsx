@@ -20,7 +20,7 @@ const Login = () => {
       );
 
       alert("Login successful");
-      localStorage.setItem("email",email)
+      localStorage.setItem("email", email);
       navigate("/books");
     } catch (error) {
       console.error("Login Failed:", error);
@@ -29,27 +29,30 @@ const Login = () => {
   };
 
   return (
-    <div class="font-[sans-serif] max-sm:px-4 md:w-screen flex justify-center items-center w-screen">
-      <div class="md:max-w-md w-full px-6 py-6 shadow-md rounded-lg">
+    <div className="font-[sans-serif] max-sm:px-4 md:w-screen flex justify-center items-center w-screen">
+      <div className="md:max-w-md w-full px-6 py-6 shadow-md rounded-lg">
         <form onSubmit={toLogin}>
-          <div class="mb-12">
-            <h3 class="text-gray-800 text-3xl font-extrabold">Sign in</h3>
+          <div className="mb-12">
+            <h3 className="text-gray-800 text-3xl font-extrabold">Sign in</h3>
             <p className="text-sm mt-4 text-gray-800">
               Don't have an account?
-              <span className="text-blue-600 font-semibold cursor-pointer ml-1 whitespace-nowrap" onClick={() =>navigate("/register")}>
+              <span
+                className="text-blue-600 font-semibold cursor-pointer ml-1 whitespace-nowrap"
+                onClick={() => navigate("/register")}
+              >
                 Register here
               </span>
             </p>
           </div>
 
           <div>
-            <label class="text-gray-800 text-xs block mb-2">Email</label>
-            <div class="relative flex items-center">
+            <label className="text-gray-800 text-xs block mb-2">Email</label>
+            <div className="relative flex items-center">
               <input
                 name="email"
                 type="text"
                 required
-                class="w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none"
+                className="w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none"
                 placeholder="Enter email"
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -59,7 +62,7 @@ const Login = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="#bbb"
                 stroke="#bbb"
-                class="w-[18px] h-[18px] absolute right-2"
+                className="w-[18px] h-[18px] absolute right-2"
                 viewBox="0 0 682.667 682.667"
               >
                 <defs>
@@ -68,13 +71,13 @@ const Login = () => {
                   </clipPath>
                 </defs>
                 <g
-                  clip-path="url(#a)"
+                  clipPath="url(#a)"
                   transform="matrix(1.33 0 0 -1.33 0 682.667)"
                 >
                   <path
                     fill="none"
-                    stroke-miterlimit="10"
-                    stroke-width="40"
+                    strokeMiterlimit="10"
+                    strokeWidth="40"
                     d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
                     data-original="#000000"
                   ></path>
@@ -87,14 +90,14 @@ const Login = () => {
             </div>
           </div>
 
-          <div class="mt-8">
-            <label class="text-gray-800 text-xs block mb-2">Password</label>
-            <div class="relative flex items-center">
+          <div className="mt-8">
+            <label className="text-gray-800 text-xs block mb-2">Password</label>
+            <div className="relative flex items-center">
               <input
                 name="password"
                 type="password"
                 required
-                class="w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none"
+                className="w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none"
                 placeholder="Enter password"
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -104,7 +107,7 @@ const Login = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="#bbb"
                 stroke="#bbb"
-                class="w-[18px] h-[18px] absolute right-2 cursor-pointer"
+                className="w-[18px] h-[18px] absolute right-2 cursor-pointer"
                 viewBox="0 0 128 128"
               >
                 <path
@@ -115,49 +118,49 @@ const Login = () => {
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center justify-between gap-4 mt-6">
-            <div class="flex items-center">
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
+            <div className="flex items-center">
               <input
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label for="remember-me" class="ml-3 block text-sm text-gray-800">
+              <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-800">
                 Remember me
               </label>
             </div>
             <div>
               <a
                 href="jajvascript:void(0);"
-                class="text-blue-600 font-semibold text-sm hover:underline"
+                className="text-blue-600 font-semibold text-sm hover:underline"
               >
                 Forgot Password?
               </a>
             </div>
           </div>
 
-          <div class="mt-12">
+          <div className="mt-12">
             <button
               type="submit"
-              class="w-full shadow-xl py-2.5 px-4 text-sm tracking-wide rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+              className="w-full shadow-xl py-2.5 px-4 text-sm tracking-wide rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
               style={{ background: "#131B2B", border: "none", outline: "none" }}
             >
               Sign in
             </button>
           </div>
 
-          <div class="my-4 flex items-center gap-4">
-            <hr class="w-full border-gray-300" />
-            <p class="text-sm text-gray-800 text-center">or</p>
-            <hr class="w-full border-gray-300" />
+          <div className="my-4 flex items-center gap-4">
+            <hr className="w-full border-gray-300" />
+            <p className="text-sm text-gray-800 text-center">or</p>
+            <hr className="w-full border-gray-300" />
           </div>
 
-          <div class="space-x-6 flex justify-center">
-            <button type="button" class="border-none outline-none">
+          <div className="space-x-6 flex justify-center">
+            <button type="button" className="border-none outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7 inline"
+                className="w-7 h-7 inline"
                 viewBox="0 0 512 512"
               >
                 <path
@@ -192,10 +195,10 @@ const Login = () => {
                 />
               </svg>
             </button>
-            <button type="button" class="border-none outline-none">
+            <button type="button" className="border-none outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7 inline"
+                className="w-7 h-7 inline"
                 fill="#000"
                 viewBox="0 0 22.773 22.773"
               >
@@ -205,16 +208,16 @@ const Login = () => {
                 ></path>
               </svg>
             </button>
-            <button type="button" class="border-none outline-none">
+            <button type="button" className="border-none outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7 inline"
+                className="w-7 h-7 inline"
                 fill="#007bff"
                 viewBox="0 0 167.657 167.657"
               >
                 <path
-                  d="M83.829.349C37.532.349 0 37.881 0 84.178c0 41.523 30.222 75.911 69.848 82.57v-65.081H49.626v-23.42h20.222V60.978c0-20.037 12.238-30.956 30.115-30.956 8.562 0 15.92.638 18.056.919v20.944l-12.399.006c-9.72 0-11.594 4.618-11.594 11.397v14.947h23.193l-3.025 23.42H94.026v65.653c41.476-5.048 73.631-40.312 73.631-83.154 0-46.273-37.532-83.805-83.828-83.805z"
-                  data-original="#010002"
+                  d="M83.829.349C37.532.349 0 37.881 0 84.178c0 41.523 30.222 75.911 69.848 82.57v-65.081H49.626v-23.42h20.222V60.178c0-20.275 11.719-31.688 30.457-31.688 8.888 0 18.091 1.654 18.091 1.654v20.187h-10.168c-9.991 0-13.116 6.392-13.116 12.894v15.057h22.302l-3.561 23.42H89.911v65.081c39.62-6.466 69.848-41.058 69.848-82.57 0-46.297-37.532-83.83-83.829-83.83z"
+                  data-original="#007bff"
                 ></path>
               </svg>
             </button>

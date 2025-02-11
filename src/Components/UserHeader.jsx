@@ -19,7 +19,7 @@ const UserHeader = () => {
           Categories
         </Link>
         <Link
-          to="/"
+          to="/books"
           className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
         >
           Books
@@ -102,7 +102,7 @@ const UserHeader = () => {
           Orders
         </Link>
         <Link
-          to="/"
+          to="/favorite"
           className="block py-2 px-4 text-gray-600 hover:text-gray-900"
           onClick={toggleMenu}
         >

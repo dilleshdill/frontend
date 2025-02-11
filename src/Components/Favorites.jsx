@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaCircleMinus } from "react-icons/fa6";
-
+import { FaStar, FaRegStar, FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 const Favorite = () => {
     const [cart, setCart] = useState([]);
 
@@ -95,7 +97,7 @@ const Favorite = () => {
     return (
         <div className="w-full h-full bg-white bg-opacity-90 fixed top-0 overflow-y-auto p-5">
             <div className="flex flex-col lg:flex-row min-h-screen">
-                {/* Left Section - Cart Items */}
+                
                 <div className="lg:w-3/4 w-full bg-white p-5">
                     <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 pb-5 text-center lg:text-left">
                         Favorites ({cart.length})
@@ -107,72 +109,32 @@ const Favorite = () => {
                                 <h3 className="text-lg font-bold text-gray-800">{item.book_name}</h3>
                                 <p className="text-gray-600">Price: ₹{item.price}</p>
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <button
-                                        onClick={() => setDecrement(item.book_name)}
-                                        style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            width: "40px",
-                                            height: "40px",
-                                            borderRadius: "50%",
-                                            backgroundColor: "gray",
-                                            color: "white",
-                                            outline: "none",
-                                            border: "none",
-                                            cursor: "pointer"
-                                        }}
-                                        onMouseOver={(e) => (e.target.style.backgroundColor = "#6b7280")}
-                                        onMouseOut={(e) => (e.target.style.backgroundColor = "gray")}
-                                    >
-                                        <FaCircleMinus style={{ color: "black", height: "20px", width: "20px" }} />
-                                    </button>
-                                    <span style={{ fontSize: "2rem", fontWeight: "bold", margin: "0 16px" }}>
-                                        {item.count}
-                                    </span>
-                                    <button
-                                        onClick={() => setIncrement(item.book_name)}
-                                        style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            width: "40px",
-                                            height: "40px",
-                                            borderRadius: "50%",
-                                            backgroundColor: "#6366f1",
-                                            color: "white",
-                                            outline: "none",
-                                            border: "none",
-                                            cursor: "pointer"
-                                        }}
-                                        onMouseOver={(e) => (e.target.style.backgroundColor = "#4f46e5")}
-                                        onMouseOut={(e) => (e.target.style.backgroundColor = "#6366f1")}
-                                    >
-                                        <svg
-                                            style={{ width: "24px", height: "24px" }}
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M12 6v12M6 12h12"
-                                            ></path>
-                                        </svg>
-                                    </button>
+                                    <button className="text-gray-600 w-[40px] !bg-transparent outline-none border-0" style={{border:0,outline:0}} onClick={() => setDecrement(item.book_name)}><FaMinusCircle className=" text-2xl" /></button>
+                                        <span className="text-2xl font-bold pl-5 mr-0 pr-0">{item.count}</span>
+                                    <button className="text-blue-600 w-[40px]  outline-none border-0 !bg-transparent " style={{border:0,outline:0}} onClick={() => setIncrement(item.book_name)}><FaPlusCircle className=" text-2xl"  /></button>
                                 </div>
                                 <div className="flex items-center justify-center lg:justify-end pr-5 mt-2">
-                                    <button onClick={() => removeItem(item.book_name)} className="text-red-500">Remove</button>
+                                    <Popup trigger={<button className="text-red-500 !bg-transparent" style={{border:0,outline:0}}>Remove</button>}
+                                   >
+                                        {
+                                            (close)=>(
+                                                <div>
+                                                    <button onClick={()=>{
+                                                        close()
+                                                        removeItem(item.book_name)
+                                                    }}>are you sure</button>
+                                                    <button onClick={close}>Cancel</button>
+                                                </div>
+                                            )
+                                        }
+                                    </Popup>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Right Section - Summary */}
+
                 <div className="lg:w-1/4 w-full mt-10 lg:mt-20 bg-gray-100 p-6 rounded-lg">
                     <div className="sticky top-0 p-5 bg-gray-100 md:h-[80vh] flex flex-col justify-between rounded-lg">
                         <div>
