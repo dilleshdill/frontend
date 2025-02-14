@@ -9,26 +9,30 @@ const AddBook = () => {
     const [price,setPrice] = useState('')
     const [author,setAuthor] = useState('')
     const [date,setDate] = useState('')
-    const toAddBook = async (event) =>{
-        event.preventDefault()
-        try{
-            const response = await axios.post("http://localhost:5002/admin/add-book", {
-                book_name: bookName, 
-                discription, 
-                book_url: bookUrl, 
-                rating, 
-                price, 
-                author, 
-                date
-            },
-            { withCredentials: true }
-        );
-            alert("book added successfully")
-        }catch(error){
-            alert(" Book is already present")
-            console.log(error)
+    const [catogory,setCatogory] = useState('')
+
+      const toAddBook = async (event) => {
+        event.preventDefault();
+        try {
+          const response = await axios.post("http://localhost:5002/admin/add-book", {
+            book_name: bookName,
+            discription,
+            book_url: bookUrl,
+            catogory,
+            rating,
+            price,
+            author,
+            date
+          },
+          { withCredentials: true });
+      
+          alert("Book added successfully");
+        } catch (error) {
+          alert("Book is already present");
+          console.log(error);
         }
-    }
+      };
+      
   return (
     <div className="flex items-center justify-center p-12">
     <div className="mx-auto w-full max-w-[550px] bg-white">
@@ -39,6 +43,39 @@ const AddBook = () => {
                 </label>
                 <input type="text" name="name" id="name" placeholder="Full Name" onChange={(e)=>setBookName(e.target.value)}
                     className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+            </div>
+            <div className="mb-5">
+                <label htmlFor="category" className="mb-3 block text-base font-medium text-[#07074D]">
+                    Category
+                </label>
+                <select
+                    id="category"
+                    onChange={(e) => setCatogory(e.target.value)}
+                    value={catogory}
+                    className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                    >
+                    <option selected id="fiction" value="Fiction">Fiction</option>
+                    <option id="non_fiction" value="Non-Fiction">Non-Fiction</option>
+                    <option id="mystery" value="Mystery">Mystery</option>
+                    <option id="fantasy" value="Fantasy">Fantasy</option>
+                    <option id="science_fiction" value="Science Fiction">Science Fiction</option>
+                    <option id="romance" value="Romance">Romance</option>
+                    <option id="thriller" value="Thriller">Thriller</option>
+                    <option id="horror" value="Horror">Horror</option>
+                    <option id="historical" value="Historical Fiction">Historical Fiction</option>
+                    <option id="biography" value="Biography">Biography</option>
+                    <option id="self_help" value="Self-Help">Self-Help</option>
+                    <option id="young_adult" value="Young Adult">Young Adult</option>
+                    <option id="children" value="Children's Literature">Children's Literature</option>
+                    <option id="dystopian" value="Dystopian">Dystopian</option>
+                    <option id="adventure" value="Adventure">Adventure</option>
+                    <option id="crime" value="Crime">Crime</option>
+                    <option id="poetry" value="Poetry">Poetry</option>
+                    <option id="graphic_novel" value="Graphic Novel">Graphic Novel</option>
+                    <option id="philosophy" value="Philosophy">Philosophy</option>
+                    <option id="spirituality" value="Spirituality">Spirituality</option>
+                </select>
+
             </div>
             <div className="mb-5">
                 <label for="phone" className="mb-3 block text-base font-medium text-[#07074D]">

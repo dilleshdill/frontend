@@ -5,14 +5,16 @@ import { FaStar, FaRegStar, FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const data = [
   { id: 1, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
   { id: 2, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
   { id: 3, image: "https://d2g9wbak88g7ch.cloudfront.net/productimages/mainimages/372/9781572245372.jpg" },
 ];
-
 const ProductDetails = () => {
+  
   const { _id } = useParams();
   const [book, setBook] = useState(null);
   const [buy, setBuy] = useState(true);
@@ -37,6 +39,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     setEmail(localStorage.getItem("email"));
+    
   }, []);
 
   useEffect(() => {
@@ -48,7 +51,6 @@ const ProductDetails = () => {
         if (response.status === 200) {
           setBook(response.data);
 
-          // Check if book is in favorites
           const cartResponse = await axios.get(`http://localhost:5002/favorite?email=${email}`);
           const updatedItem = cartResponse.data.find((item) => item.book_name === response.data.book_name);
 
@@ -66,9 +68,21 @@ const ProductDetails = () => {
     fetchBookDetails();
   }, [_id, email]);
 
+  const showToast = (message, type = "success") => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+  };
+
   const modifyFavoriteCount = async (book_name, action) => {
     if (!email) {
-      alert("Please log in to modify favorites.");
+      showToast("Please log in to modify favorites.","error")
       return;
     }
 
@@ -103,11 +117,11 @@ const ProductDetails = () => {
       });
 
       if (response.status === 200) {
-        alert("Added to Favorite");
+        showToast("Added to Cart", "success");
         setBuy(false);
         setCounter(1);
       } else if (response.status === 201) {
-        alert("Removed from Favorite");
+        showToast("Removed from Cart", "info");
         setBuy(true);
       }
     } catch (error) {
@@ -121,13 +135,14 @@ const ProductDetails = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen w-screen p-6 flex justify-center">
+      <ToastContainer />
       <div className="w-full h-[50%] rounded-lg p-6">
         {/* Book Image Section */}
-        <div className="flex flex-row md:pl-30">
+        <div className="flex flex-col md:pl-30 md:flex-row">
           {/* Small Preview Images */}
-          <div className="flex flex-col space-y-3 w-[6%]">
+          <div className=" flex-col space-y-3 w-[6%]  hidden md:flex">
             {data.map((eachItem,index) => (
-              <img key={eachItem.id} src={eachItem.image} alt="Book Cover" className={`w-full rounded-lg shadow-md ${activeIndex===index ? "opacity-100" : 'opacity-20'}`} onClick={
+              <img key={eachItem.id} src={book.book_url} alt="Book Cover" className={`w-full rounded-lg shadow-md ${activeIndex===index ? "opacity-100" : 'opacity-20'}`} onClick={
                 ()=>{
                   sliderRef.current.slickGoTo(index)
                   setIndex(index)
@@ -143,7 +158,7 @@ const ProductDetails = () => {
               {data.map((eachItem) => (
                 <div key={eachItem.id} className="flex justify-center w-full">
                   <img
-                    src={eachItem.image}
+                    src={book.book_url}
                     alt="Book Cover"
                     className="w-full md:w-[100%] max-w-xs md:max-w-sm rounded-lg shadow-md"
                   />
@@ -174,25 +189,25 @@ const ProductDetails = () => {
             </div>
 
             {buy ? (
-              <button onClick={() => toggleFavorite(book)} className="bg-gray-800 text-white px-6 py-2 rounded">
+              <button onClick={() => toggleFavorite(book)} className="!bg-gray-800 text-white px-6 py-2 rounded">
                 Add Favorite
               </button>
             ) : (
               <div>
                 <div className="flex items-center space-x-3">
-                  <button className="text-gray-600" onClick={() => modifyFavoriteCount(book.book_name, "decrement")}>
-                    <FaMinusCircle className="text-3xl" />
+                  <button className="text-gray-600 !bg-transparent" style={{border:0,outline:0}} onClick={() => modifyFavoriteCount(book.book_name, "decrement")}>
+                    <FaMinusCircle className=" size-7" />
                   </button>
-                  <span className="text-2xl font-bold pl-2 pr-0">{counter}</span>
-                  <button className="text-blue-600" onClick={() => modifyFavoriteCount(book.book_name, "increment")}>
-                    <FaPlusCircle className="text-3xl" />
+                  <span className="text-2xl font-bold pl-0 ml-0 mr-0 pr-0">{counter}</span>
+                  <button className="text-blue-600 !bg-transparent" style={{border:0,outline:0}} onClick={() => modifyFavoriteCount(book.book_name, "increment")}>
+                    <FaPlusCircle className="size-7" />
                   </button>
                 </div>
                 <div className="pt-5 space-x-8 flex">
-                  <button onClick={() => navigate("/favorite")} className="bg-gray-800 text-white px-6 py-2 rounded">
+                  <button onClick={() => navigate("/favorite")} className="!bg-gray-800 text-white px-6 py-2 rounded">
                     Buy Now
                   </button>
-                  <button onClick={() => toggleFavorite(book)} className="bg-gray-500 text-white px-6 py-2 rounded">
+                  <button onClick={() => toggleFavorite(book)} className="!bg-gray-500 text-white px-6 py-2 rounded">
                     Remove
                   </button>
                 </div>

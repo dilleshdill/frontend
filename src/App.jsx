@@ -15,6 +15,7 @@ import Favorite from './Components/Favorites';
 import ProductDetails from './Components/ProductDetails';
 import CustomerDetails from './Components/CustomerDetails';
 import Homepage from './HomePage/HomePage';
+import Wishlist from './Wishlist/Wishlist';
 
 const App = () =>{
   return(
@@ -27,13 +28,13 @@ const App = () =>{
         <Route path ='/sidebar' element = {<Sidebar />} />
         <Route path ='/dashboard' element ={<Dashboard />} />
         <Route path='/adminLogin' element = {<AdminLogin />} />
-        <Route path='/userheader' element = {<UserHeader/>}/>
         <Route path='/addbook' element = {<AddBook/>} />
         <Route path = '/viewbooks' element = {<ViewBooks/>}/>
         <Route path = '/books' element = {<Books/>}/>
         <Route path = '/favorite' element = {<Favorite/>}/>
         <Route path = '/books/:_id' element = {<ProductDetails/>}/>
         <Route path = '/customerdetails' element = {<CustomerDetails/>}/>
+        <Route path = '/wishlist' element = {<Wishlist/>}/>
        </Routes>
     </BrowserRouter>
   )

@@ -12,6 +12,12 @@ const UserHeader = () => {
     <nav className="relative w-screen flex items-center justify-between sm:h-16 md:justify-between py-4 px-6 bg-white shadow-md text-gray-600 mt-0">
       {/* Desktop Menu */}
       <div className="hidden md:flex md:space-x-10">
+      <Link
+          to="/"
+          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
+        >
+          Home
+        </Link>
         <Link
           to="/"
           className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
@@ -25,16 +31,28 @@ const UserHeader = () => {
           Books
         </Link>
         <Link
+          to="/chat"
+          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
+        >
+          Chat
+        </Link>
+        <Link
           to="/"
           className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
         >
           Orders
         </Link>
         <Link
+          to="/wishlist"
+          className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
+        >
+          Wishlist
+        </Link>
+        <Link
           to="/favorite"
           className="font-medium !text-gray-600 hover:!text-gray-900 transition duration-150 ease-in-out"
         >
-          Favorites
+          Cart
         </Link>
       </div>
 
@@ -85,14 +103,28 @@ const UserHeader = () => {
           className="block py-2 px-4 text-gray-600 hover:text-gray-900"
           onClick={toggleMenu}
         >
-          Categories
+          Home
         </Link>
         <Link
           to="/"
           className="block py-2 px-4 text-gray-600 hover:text-gray-900"
           onClick={toggleMenu}
         >
+          Categories
+        </Link>
+        <Link
+          to="/books"
+          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
+          onClick={toggleMenu}
+        >
           Books
+        </Link>
+        <Link
+          to="/chat"
+          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
+          onClick={toggleMenu}
+        >
+          Chat
         </Link>
         <Link
           to="/"
@@ -102,18 +134,25 @@ const UserHeader = () => {
           Orders
         </Link>
         <Link
+          to="/wishlist"
+          className="block py-2 px-4 text-gray-600 hover:text-gray-900"
+          onClick={toggleMenu}
+        >
+          Wishlist
+        </Link>
+        <Link
           to="/favorite"
           className="block py-2 px-4 text-gray-600 hover:text-gray-900"
           onClick={toggleMenu}
         >
-          Favorites
+          Cart
         </Link>
       </div>
 
       {/* Right-side Login/Logout Buttons */}
       <div className="hidden md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
         <Link
-          to="/"
+          to="/login"
           className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium !text-gray-600 hover:!text-gray-900 focus:outline-none transition duration-150 ease-in-out"
         >
           Login

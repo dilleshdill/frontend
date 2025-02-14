@@ -3,6 +3,7 @@ import SearchBar from "./SearchBar";
 import UserHeader from "./UserHeader";
 import ViewBooks from "./ViewBooks";
 import Author from "./author";
+import axios from "axios";
 
 const Books = () => {
   const genreFilters = [
@@ -29,6 +30,7 @@ const Books = () => {
   ];
 
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [searchFilter,setSearchFilter] = useState('')
 
   const handleFilterClick = (filter) => {
     if (selectedFilters.includes(filter.id)) {
@@ -37,6 +39,8 @@ const Books = () => {
       setSelectedFilters((prev) => [...prev, filter.id]);
     }
   };
+
+  
 
   return (
     <div className="mt-0 pt-0 md:min-h-[100vh]">

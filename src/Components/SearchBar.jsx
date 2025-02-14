@@ -1,15 +1,45 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        const fetchSearchTerm = async () => {
+            try {
+                const email = localStorage.getItem("email");
+                if (!email) return;
 
-    const handleSearch = () => {
-        if (!searchTerm.trim()) return;
-        setLoading(true);
-        onSearch(searchTerm);
-        setTimeout(() => setLoading(false), 1000); // Simulated API call delay
-    };
+                const searchItem = await axios.get(`http://localhost:5002/getSearch?email=${email}`);
+
+                if (searchItem.status === 200) {
+                    setSearchTerm(searchItem.data.value);
+                } else {
+                    setSearchTerm("");
+                }
+            } catch (error) {
+                console.error("Error fetching search term:", error);
+                setSearchTerm("");
+            }
+        };
+
+        fetchSearchTerm();
+    }, []);
+
+    const handleSearch=async()=>{
+        try{
+            const email = localStorage.getItem("email")
+            const response=await axios.post('http://localhost:5002/getSearch',{
+                email,
+                searchTerm,
+            })
+            if (response.status===200){
+                console.log('added succesffulyy')
+            }
+        }catch(e){
+            console.log("something went wrong",e)
+        }
+    }
 
     return (
         <label className="mx-auto mt-10  relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center  py-2 px-2 rounded-2xl gap-2 shadow-lg focus-within:border-gray-300">
@@ -23,7 +53,6 @@ const SearchBar = ({ onSearch }) => {
             />
             <button
                 onClick={handleSearch}
-                disabled={loading}
                 className="w-full md:w-auto px-6 py-3 !bg-black border-black text-white fill-white active:scale-95 duration-100 border overflow-hidden relative rounded-xl transition-all disabled:opacity-70"
             >
                 <div className="relative flex items-center justify-center">
